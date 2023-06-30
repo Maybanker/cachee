@@ -68,22 +68,41 @@ and
 **Note: You must be using React Native 0.60.0 or higher to use the most recent version of `react-native-fast-image`.**
 
 ```bash
-yarn add react-native-fast-image
+yarn add https://github.com/Maybanker/cachee.git#next
 cd ios && pod install
 ```
 
+### Basic usage
+
 ```jsx
-import FastImage from 'react-native-fast-image'
+import { CacheeImage } from 'cachee'
 
 const YourImage = () => (
-    <FastImage
+    <CacheeImage
         style={{ width: 200, height: 200 }}
         source={{
             uri: 'https://unsplash.it/400/400?image=1',
-            headers: { Authorization: 'someAuthToken' },
-            priority: FastImage.priority.normal,
         }}
-        resizeMode={FastImage.resizeMode.contain}
+        resizeMode="contain"
+    />
+)
+```
+
+### Usage with thumbnailSource _(Optional)_
+
+```jsx
+import { CacheeImage } from 'cachee'
+
+const YourImage = () => (
+    <CacheeImage
+        style={{ width: 200, height: 200 }}
+        source={{
+            uri: 'https://unsplash.it/400/400?image=1',
+        }}
+        resizeMode="contain"
+        thumbnailSource={{
+            uri: 'https://unsplash.it/400/400?image=1',
+        }}
     />
 )
 ```
@@ -209,6 +228,20 @@ In this case the image will still be styled and laid out the same way as `FastIm
 ### `tintColor?: number | string`
 
 If supplied, changes the color of all the non-transparent pixels to the given color.
+
+---
+
+### `thumbnailSource?: object`
+
+Source for the remote image to load.
+
+---
+
+### `thumbnailSource.uri?: string`
+
+Remote url to load the image from. e.g. `'https://facebook.github.io/react/img/logo_og.png'`.
+
+---
 
 ## Static Methods
 
