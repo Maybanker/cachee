@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import PropTypes from 'prop-types';
 export declare const CacheeImage: {
     (props: any): JSX.Element;

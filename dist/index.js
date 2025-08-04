@@ -1,6 +1,6 @@
 import _extends from '@babel/runtime/helpers/extends';
 import React, { forwardRef, memo } from 'react';
-import { NativeModules, StyleSheet, requireNativeComponent, Image, View, Platform } from 'react-native';
+import { NativeModules, StyleSheet, Platform, View, Image } from 'react-native';
 import PropTypes from 'prop-types';
 
 const resizeMode = {
@@ -61,11 +61,10 @@ function FastImageBase({
   forwardedRef,
   ...props
 }) {
-  if (fallback) {
+  if (fallback || Platform.OS === 'web') {
     const cleanedSource = { ...source
     };
     delete cleanedSource.cache;
-    const resolvedSource = Image.resolveAssetSource(cleanedSource);
     return /*#__PURE__*/React.createElement(View, {
       style: [styles.imageContainer, style],
       ref: forwardedRef
@@ -73,8 +72,8 @@ function FastImageBase({
       style: [StyleSheet.absoluteFill, {
         tintColor
       }],
-      source: resolvedSource,
-      defaultSource: defaultSource,
+      source: cleanedSource,
+      defaultSource: cleanedSource,
       onLoadStart: onLoadStart,
       onProgress: onProgress,
       onLoad: onLoad,
@@ -123,17 +122,27 @@ const styles = StyleSheet.create({
   imageContainer: {
     overflow: 'hidden'
   }
-}); // Types of requireNativeComponent are not correct.
-
-const FastImageView = requireNativeComponent('FastImageView', FastImage, {
-  nativeOnly: {
-    onFastImageLoadStart: true,
-    onFastImageProgress: true,
-    onFastImageLoad: true,
-    onFastImageError: true,
-    onFastImageLoadEnd: true
-  }
 });
+let FastImageView;
+
+if (Platform.OS === 'web') {
+  FastImageView = Image;
+} else {
+  // Types of requireNativeComponent are not correct.
+  const {
+    requireNativeComponent
+  } = require('react-native');
+
+  FastImageView = requireNativeComponent('FastImageView', FastImage, {
+    nativeOnly: {
+      onFastImageLoadStart: true,
+      onFastImageProgress: true,
+      onFastImageLoad: true,
+      onFastImageError: true,
+      onFastImageLoadEnd: true
+    }
+  });
+}
 
 const CacheeImage = props => {
   var _source;
